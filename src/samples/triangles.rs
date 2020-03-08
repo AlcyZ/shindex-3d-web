@@ -22,7 +22,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
         .unwrap()
         .dyn_into::<web_sys::WebGlRenderingContext>()?;
 
-    let triangles = [
+    let triangles = vec![
         Triangle {
             face: FACE_ZERO,
             color: [1., 1., 1., 1.],
@@ -54,10 +54,10 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
 
     // lookup attributes
     let position_loc = gl.get_attrib_location(&program, "position") as u32;
-    let color_loc = gl.get_attrib_location(&program, "color") as u32;
+    let color_loc = gl.get_uniform_location(&program, "color").expect("could not find 'color' uniform location");
 
     // 2. draw (foreach triangle)
-    for triangle in &triangles {
+    for triangle in triangles {
         // pos: enable vertex attrib array, bind buffer and vertex attrib pointer
         let pos_buffer = gl.create_buffer().ok_or("could not create webgl buffer")?;
         gl.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&pos_buffer));
@@ -79,9 +79,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
         );
         gl.enable_vertex_attrib_array(position_loc);
 
-        // color: disable vertex attrib array, bind buffer and vertex attrib pointer
-        gl.disable_vertex_attrib_array(color_loc);
-        gl.vertex_attrib4fv_with_f32_array(color_loc, &triangle.color);
+        gl.uniform4fv_with_f32_array(Some(&color_loc), &triangle.color);
 
         gl.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, 3);
     }

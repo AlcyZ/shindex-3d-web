@@ -27,7 +27,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     gl.use_program(Some(&program));
 
     let pos_loc = gl.get_attrib_location(&program, "position") as u32;
-    let color_loc = gl.get_attrib_location(&program, "color") as u32;
+    let color_loc = gl.get_uniform_location(&program, "color").expect("could not find 'color' uniform location");
 
     let pos_buffer = create_buffer(&gl)?;
     gl.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&pos_buffer));
@@ -42,7 +42,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     gl.vertex_attrib_pointer_with_i32(pos_loc, 3, WebGlRenderingContext::FLOAT, false, 0, 0);
     gl.enable_vertex_attrib_array(pos_loc);
 
-    gl.vertex_attrib4fv_with_f32_array(color_loc, &COLOR_GREEN);
+    gl.uniform4fv_with_f32_array(Some(&color_loc), &COLOR_GREEN);
 
     // bind index buffer
     let index_buffer = create_buffer(&gl)?;

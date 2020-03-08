@@ -54,7 +54,7 @@ fn simple_rectangle(gl: &WebGlRenderingContext, program: &WebGlProgram) -> Resul
     };
 
     let position_loc = gl.get_attrib_location(&program, "position") as u32;
-    let color_loc = gl.get_attrib_location(&program, "color") as u32;
+    let color_loc = gl.get_uniform_location(&program, "color").expect("could not find 'color' uniform location");
 
     let pos_buffer = gl.create_buffer().ok_or("could not create webgl buffer")?;
     gl.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&pos_buffer));
@@ -69,7 +69,7 @@ fn simple_rectangle(gl: &WebGlRenderingContext, program: &WebGlProgram) -> Resul
     gl.vertex_attrib_pointer_with_i32(position_loc, 3, WebGlRenderingContext::FLOAT, false, 0, 0);
     gl.enable_vertex_attrib_array(position_loc);
 
-    gl.vertex_attrib4fv_with_f32_array(color_loc, &model.color);
+    gl.uniform4fv_with_f32_array(Some(&color_loc), &model.color);
 
     gl.draw_arrays(
         WebGlRenderingContext::TRIANGLES,
@@ -96,7 +96,7 @@ fn two_different_colored_rectangles(
     ];
 
     let position_loc = gl.get_attrib_location(&program, "position") as u32;
-    let color_loc = gl.get_attrib_location(&program, "color") as u32;
+    let color_loc = gl.get_uniform_location(&program, "color").expect("could not find 'color' uniform location");
 
     for triangle in model {
         let pos_buffer = gl.create_buffer().ok_or("could not create webgl buffer")?;
@@ -119,7 +119,7 @@ fn two_different_colored_rectangles(
         );
         gl.enable_vertex_attrib_array(position_loc);
 
-        gl.vertex_attrib4fv_with_f32_array(color_loc, &triangle.color);
+        gl.uniform4fv_with_f32_array(Some(&color_loc), &triangle.color);
 
         gl.draw_arrays(
             WebGlRenderingContext::TRIANGLES,
