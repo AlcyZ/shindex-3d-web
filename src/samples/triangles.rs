@@ -1,23 +1,14 @@
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
 
-use web_sys::{HtmlCanvasElement, WebGlShader, WebGlProgram, WebGlRenderingContext};
-
+use crate::gl::resize;
 use crate::shaders::*;
-use crate::gl::{compile_shader, ShaderType, link_program, resize};
 
-const FACE_ZERO: [f32; 9] = [
-    -0.9, -0.9, 0.4, 0.9, -0.9, 0.4, 0.0, 0.9, 0.4
-];
-const FACE_ONE: [f32; 9] = [
-    -0.7, -0.7, 0.6, 0.7, -0.7, 0.6, 0.0, 0.7, 0.6
-];
-const FACE_TWO: [f32; 9] = [
-    -0.5, -0.5, 0.8, 0.5, -0.5, 0.8, 0.0, 0.5, 0.8
-];
-const FACE_THREE: [f32; 9] = [
-    -0.3, -0.3, 1.0, 0.3, -0.3, 1.0, 0.0, 0.3, 1.0
-];
+const FACE_ZERO: [f32; 9] = [-0.9, -0.9, 0.4, 0.9, -0.9, 0.4, 0.0, 0.9, 0.4];
+const FACE_ONE: [f32; 9] = [-0.7, -0.7, 0.6, 0.7, -0.7, 0.6, 0.0, 0.7, 0.6];
+const FACE_TWO: [f32; 9] = [-0.5, -0.5, 0.8, 0.5, -0.5, 0.8, 0.0, 0.5, 0.8];
+const FACE_THREE: [f32; 9] = [-0.3, -0.3, 1.0, 0.3, -0.3, 1.0, 0.0, 0.3, 1.0];
 
 #[derive(Debug)]
 struct Triangle {
@@ -92,11 +83,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
         gl.disable_vertex_attrib_array(color_loc);
         gl.vertex_attrib4fv_with_f32_array(color_loc, &triangle.color);
 
-        gl.draw_arrays(
-            WebGlRenderingContext::TRIANGLES,
-            0,
-            3,
-        );
+        gl.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, 3);
     }
 
     Ok(())

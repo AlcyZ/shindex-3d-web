@@ -1,6 +1,7 @@
 use wasm_bindgen::JsValue;
-use crate::gl::{compile_shader, ShaderType, link_program};
 use web_sys::{WebGlProgram, WebGlRenderingContext};
+
+use crate::gl::{compile_shader, link_program, ShaderType};
 
 const VERTEX_SHADER: &str = r#"
 attribute vec4 position;

@@ -1,9 +1,9 @@
 use wasm_bindgen::JsValue;
 use web_sys::HtmlCanvasElement;
 
-mod triangles;
 mod rectangle;
 mod rectangle_index_buffer;
+mod triangles;
 
 #[allow(dead_code)]
 pub fn draw_triangles(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {

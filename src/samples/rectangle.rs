@@ -1,31 +1,17 @@
-use wasm_bindgen::JsValue;
 use wasm_bindgen::JsCast;
-
+use wasm_bindgen::JsValue;
 use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext};
-use crate::gl::{link_program, compile_shader, ShaderType, resize};
+
+use crate::gl::resize;
 use crate::shaders::*;
 
 const FACES: [f32; 18] = [
     // first face
-    -0.75, -0.75, 1.,
-    0.75, -0.75, 1.,
-    0.75, 0.75, 1.,
-
-    // second face
-    -0.75, 0.75, 1.,
-    -0.75, -0.75, 1.,
-    0.75, 0.75, 1.
+    -0.75, -0.75, 1., 0.75, -0.75, 1., 0.75, 0.75, 1., // second face
+    -0.75, 0.75, 1., -0.75, -0.75, 1., 0.75, 0.75, 1.,
 ];
-const _FACE_ONE: [f32; 9] = [
-    -0.5, -0.5, 1.,
-    0.5, -0.5, 1.,
-    0.5, 0.5, 1.,
-];
-const _FACE_TWO: [f32; 9] = [
-    -0.5, 0.5, 1.,
-    -0.5, -0.5, 1.,
-    0.5, 0.5, 1.
-];
+const _FACE_ONE: [f32; 9] = [-0.5, -0.5, 1., 0.5, -0.5, 1., 0.5, 0.5, 1.];
+const _FACE_TWO: [f32; 9] = [-0.5, 0.5, 1., -0.5, -0.5, 1., 0.5, 0.5, 1.];
 
 const _COLOR_RED: [f32; 4] = [1., 0.0, 0.0, 1.];
 const _COLOR_GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.];
@@ -94,8 +80,10 @@ fn simple_rectangle(gl: &WebGlRenderingContext, program: &WebGlProgram) -> Resul
     Ok(())
 }
 
-
-fn two_different_colored_rectangles(gl: &WebGlRenderingContext, program: &WebGlProgram) -> Result<(), JsValue> {
+fn two_different_colored_rectangles(
+    gl: &WebGlRenderingContext,
+    program: &WebGlProgram,
+) -> Result<(), JsValue> {
     let model = vec![
         Triangle {
             face: _FACE_ONE,
@@ -104,7 +92,7 @@ fn two_different_colored_rectangles(gl: &WebGlRenderingContext, program: &WebGlP
         Triangle {
             face: _FACE_TWO,
             color: _COLOR_BLUE,
-        }
+        },
     ];
 
     let position_loc = gl.get_attrib_location(&program, "position") as u32;
@@ -121,7 +109,14 @@ fn two_different_colored_rectangles(gl: &WebGlRenderingContext, program: &WebGlP
                 WebGlRenderingContext::STATIC_DRAW,
             );
         }
-        gl.vertex_attrib_pointer_with_i32(position_loc, 3, WebGlRenderingContext::FLOAT, false, 0, 0);
+        gl.vertex_attrib_pointer_with_i32(
+            position_loc,
+            3,
+            WebGlRenderingContext::FLOAT,
+            false,
+            0,
+            0,
+        );
         gl.enable_vertex_attrib_array(position_loc);
 
         gl.vertex_attrib4fv_with_f32_array(color_loc, &triangle.color);

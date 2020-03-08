@@ -1,20 +1,15 @@
-use wasm_bindgen::JsValue;
 use wasm_bindgen::JsCast;
-use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext};
-use crate::log;
-use crate::gl::{link_program, ShaderType, compile_shader, create_buffer, resize};
-use crate::shaders::*;
-use crate::shaders::sample::setup_program;
+use wasm_bindgen::JsValue;
+use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
 
-macro_rules! console_log {
-    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
-}
+use crate::gl::{create_buffer, resize};
+use crate::shaders::sample::setup_program;
 
 const FACES: [f32; 12] = [
     -0.5, -0.5, 1., // index 0
     0.5, -0.5, 1., // index 1
     0.5, 0.5, 1., // index 2
-    -0.5, 0.5, 1. // index 3
+    -0.5, 0.5, 1., // index 3
 ];
 const INDICES: [u16; 6] = [0, 1, 2, 3, 0, 2];
 const COLOR_GREEN: [f32; 4] = [0.3, 8., 0.25, 1.];
@@ -37,7 +32,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     let pos_buffer = create_buffer(&gl)?;
     gl.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&pos_buffer));
     unsafe {
-        let vert_array = js_sys::Float32Array::view (&FACES);
+        let vert_array = js_sys::Float32Array::view(&FACES);
         gl.buffer_data_with_array_buffer_view(
             WebGlRenderingContext::ARRAY_BUFFER,
             &vert_array,
@@ -51,7 +46,10 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
 
     // bind index buffer
     let index_buffer = create_buffer(&gl)?;
-    gl.bind_buffer(WebGlRenderingContext::ELEMENT_ARRAY_BUFFER, Some(&index_buffer));
+    gl.bind_buffer(
+        WebGlRenderingContext::ELEMENT_ARRAY_BUFFER,
+        Some(&index_buffer),
+    );
     unsafe {
         let index_array = js_sys::Uint16Array::view(&INDICES[..]);
         gl.buffer_data_with_array_buffer_view(
@@ -65,7 +63,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
         WebGlRenderingContext::TRIANGLES,
         INDICES.len() as i32,
         WebGlRenderingContext::UNSIGNED_SHORT,
-        0
+        0,
     );
 
     Ok(())

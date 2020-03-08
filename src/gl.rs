@@ -1,5 +1,5 @@
-use web_sys::{WebGlShader, WebGlProgram, WebGlRenderingContext, WebGlBuffer, HtmlCanvasElement};
 use wasm_bindgen::JsValue;
+use web_sys::{HtmlCanvasElement, WebGlBuffer, WebGlProgram, WebGlRenderingContext, WebGlShader};
 
 pub enum ShaderType {
     Vertex,
@@ -13,7 +13,7 @@ pub fn compile_shader(
 ) -> Result<WebGlShader, String> {
     let shader_type = match shader_type {
         ShaderType::Vertex => WebGlRenderingContext::VERTEX_SHADER,
-        ShaderType::Fragment => WebGlRenderingContext::FRAGMENT_SHADER
+        ShaderType::Fragment => WebGlRenderingContext::FRAGMENT_SHADER,
     };
     let shader = context
         .create_shader(shader_type)
@@ -24,7 +24,8 @@ pub fn compile_shader(
     if context
         .get_shader_parameter(&shader, WebGlRenderingContext::COMPILE_STATUS)
         .as_bool()
-        .unwrap_or(false) {
+        .unwrap_or(false)
+    {
         Ok(shader)
     } else {
         Err(context

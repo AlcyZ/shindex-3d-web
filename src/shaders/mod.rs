@@ -1,3 +1,3 @@
 pub mod fragment;
-pub mod vertex;
 pub mod sample;
+pub mod vertex;
