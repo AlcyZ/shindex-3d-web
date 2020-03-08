@@ -1,4 +1,4 @@
-use web_sys::{WebGlShader, WebGlProgram, WebGlRenderingContext, HtmlCanvasElement};
+use web_sys::{WebGlShader, WebGlProgram, WebGlRenderingContext, WebGlBuffer, HtmlCanvasElement};
 use wasm_bindgen::JsValue;
 
 pub enum ShaderType {
@@ -56,6 +56,12 @@ pub fn link_program(
             .get_program_info_log(&program)
             .unwrap_or_else(|| String::from("Unknown error creating program object")))
     }
+}
+
+pub fn create_buffer(gl: &WebGlRenderingContext) -> Result<WebGlBuffer, JsValue> {
+    let buffer = gl.create_buffer().ok_or("could not create webgl buffer")?;
+
+    Ok(buffer)
 }
 
 pub fn resize(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {

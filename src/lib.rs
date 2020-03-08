@@ -25,7 +25,7 @@ pub fn run() -> Result<(), JsValue> {
     let canvas = document().get_element_by_id("surface").expect("could not find element by id 'surface'");
     let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
 
-    samples::draw_rectangle(&canvas)?;
+    samples::draw_rectangle_with_index_buffer(&canvas)?;
 
     Ok(())
 }

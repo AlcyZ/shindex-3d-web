@@ -58,9 +58,8 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
     gl.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
 
     // setup shaders and program
-    let program = sample_program(&gl)?;
+    let program = sample::setup_program(&gl)?;
     gl.use_program(Some(&program));
-
 
     // lookup attributes
     let position_loc = gl.get_attrib_location(&program, "position") as u32;
@@ -101,39 +100,6 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
     }
 
     Ok(())
-}
-
-fn sample_program(gl: &WebGlRenderingContext) -> Result<WebGlProgram> {
-    let v_shader = vertex_shader(&gl)?;
-    let f_shader = fragment_shader(&gl)?;
-
-    let program = link_program(
-        &gl,
-        &v_shader,
-        &f_shader,
-    )?;
-
-    Ok(program)
-}
-
-fn vertex_shader(gl: &WebGlRenderingContext) -> Result<WebGlShader> {
-    let shader = compile_shader(
-        &gl,
-        ShaderType::Vertex,
-        sample::VERTEX_SHADER,
-    )?;
-
-    Ok(shader)
-}
-
-fn fragment_shader(gl: &WebGlRenderingContext) -> Result<WebGlShader> {
-    let shader = compile_shader(
-        &gl,
-        ShaderType::Fragment,
-        sample::FRAGMENT_SHADER,
-    )?;
-
-    Ok(shader)
 }
 
 type Result<T> = std::result::Result<T, JsValue>;

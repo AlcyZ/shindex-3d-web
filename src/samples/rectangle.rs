@@ -52,7 +52,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     resize(&canvas)?;
     gl.viewport(0, 0, canvas.width() as i32, canvas.height() as i32);
 
-    let program = setup_program(&gl)?;
+    let program = sample::setup_program(&gl)?;
     gl.use_program(Some(&program));
 
     simple_rectangle(&gl, &program)?;
@@ -134,25 +134,4 @@ fn two_different_colored_rectangles(gl: &WebGlRenderingContext, program: &WebGlP
     }
 
     Ok(())
-}
-
-fn setup_program(gl: &WebGlRenderingContext) -> Result<WebGlProgram, JsValue> {
-    let vertex_shader = compile_shader(
-        &gl,
-        ShaderType::Vertex,
-        sample::VERTEX_SHADER,
-    )?;
-    let fragment_shader = compile_shader(
-        &gl,
-        ShaderType::Fragment,
-        sample::FRAGMENT_SHADER,
-    )?;
-
-    let program = link_program(
-        &gl,
-        &vertex_shader,
-        &fragment_shader,
-    )?;
-
-    Ok(program)
 }
