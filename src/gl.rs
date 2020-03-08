@@ -1,4 +1,5 @@
-use web_sys::{WebGlShader, WebGlProgram, WebGlRenderingContext};
+use web_sys::{WebGlShader, WebGlProgram, WebGlRenderingContext, HtmlCanvasElement};
+use wasm_bindgen::JsValue;
 
 pub enum ShaderType {
     Vertex,
@@ -55,4 +56,16 @@ pub fn link_program(
             .get_program_info_log(&program)
             .unwrap_or_else(|| String::from("Unknown error creating program object")))
     }
+}
+
+pub fn resize(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
+    let display_width = canvas.client_width();
+    let display_height = canvas.client_height();
+
+    if canvas.width() != display_width as u32 || canvas.height() != display_height as u32 {
+        canvas.set_width(display_width as u32);
+        canvas.set_height(display_height as u32);
+    }
+
+    Ok(())
 }

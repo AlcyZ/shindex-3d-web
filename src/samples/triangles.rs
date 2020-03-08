@@ -4,8 +4,7 @@ use wasm_bindgen::JsCast;
 use web_sys::{HtmlCanvasElement, WebGlShader, WebGlProgram, WebGlRenderingContext};
 
 use crate::shaders::*;
-use crate::{log, resize};
-use crate::gl::{compile_shader, link_program, ShaderType};
+use crate::gl::{compile_shader, ShaderType, link_program, resize};
 
 const FACE_ZERO: [f32; 9] = [
     -0.9, -0.9, 0.4, 0.9, -0.9, 0.4, 0.0, 0.9, 0.4
@@ -24,10 +23,6 @@ const FACE_THREE: [f32; 9] = [
 struct Triangle {
     face: [f32; 9],
     color: [f32; 4],
-}
-
-macro_rules! console_log {
-    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
 
 pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
@@ -56,7 +51,7 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<()> {
     ];
 
     // 1. init
-    resize(&canvas);
+    resize(&canvas)?;
     gl.viewport(0, 0, canvas.width() as i32, canvas.height() as i32);
 
     gl.clear_color(0., 0., 0., 1.);
