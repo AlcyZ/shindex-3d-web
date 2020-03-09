@@ -4,6 +4,14 @@ use web_sys::HtmlCanvasElement;
 mod rectangle;
 mod rectangle_index_buffer;
 mod triangles;
+mod utility;
+
+#[allow(dead_code)]
+pub fn draw_entity(_canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
+    // entity::draw(&canvas)?;
+
+    Ok(())
+}
 
 #[allow(dead_code)]
 pub fn draw_triangles(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
