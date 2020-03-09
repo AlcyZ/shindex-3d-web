@@ -2,8 +2,8 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
 
-use crate::gl::{create_buffer, resize};
-use crate::shaders::sample::setup_program;
+use crate::gl::resize;
+use crate::samples::utility::SampleProgram;
 
 const FACES: [f32; 12] = [
     -0.5, -0.5, 1., // index 0
@@ -23,48 +23,11 @@ pub fn draw(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     resize(&canvas)?;
     gl.viewport(0, 0, canvas.width() as i32, canvas.height() as i32);
 
-    let program = setup_program(&gl)?;
-    gl.use_program(Some(&program));
+    gl.clear_color(0.1, 0.1, 0.1, 1.);
+    gl.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
 
-    let pos_loc = gl.get_attrib_location(&program, "position") as u32;
-    let color_loc = gl.get_attrib_location(&program, "color") as u32;
-
-    let pos_buffer = create_buffer(&gl)?;
-    gl.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&pos_buffer));
-    unsafe {
-        let vert_array = js_sys::Float32Array::view(&FACES);
-        gl.buffer_data_with_array_buffer_view(
-            WebGlRenderingContext::ARRAY_BUFFER,
-            &vert_array,
-            WebGlRenderingContext::STATIC_DRAW,
-        );
-    }
-    gl.vertex_attrib_pointer_with_i32(pos_loc, 3, WebGlRenderingContext::FLOAT, false, 0, 0);
-    gl.enable_vertex_attrib_array(pos_loc);
-
-    gl.vertex_attrib4fv_with_f32_array(color_loc, &COLOR_GREEN);
-
-    // bind index buffer
-    let index_buffer = create_buffer(&gl)?;
-    gl.bind_buffer(
-        WebGlRenderingContext::ELEMENT_ARRAY_BUFFER,
-        Some(&index_buffer),
-    );
-    unsafe {
-        let index_array = js_sys::Uint16Array::view(&INDICES[..]);
-        gl.buffer_data_with_array_buffer_view(
-            WebGlRenderingContext::ELEMENT_ARRAY_BUFFER,
-            &index_array,
-            WebGlRenderingContext::STATIC_DRAW,
-        );
-    }
-
-    gl.draw_elements_with_i32(
-        WebGlRenderingContext::TRIANGLES,
-        INDICES.len() as i32,
-        WebGlRenderingContext::UNSIGNED_SHORT,
-        0,
-    );
+    let sample_program = SampleProgram::new(&gl, FACES.to_vec(), Some(INDICES.to_vec()))?;
+    sample_program.render(COLOR_GREEN)?;
 
     Ok(())
 }
